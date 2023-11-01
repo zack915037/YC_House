@@ -21,5 +21,12 @@ namespace YC_House.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult RowRead(string keyValue)
+        {
+            var result = dbm.QueryStudentInfoTable().Where(v => v.StudentId == keyValue).FirstOrDefault();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

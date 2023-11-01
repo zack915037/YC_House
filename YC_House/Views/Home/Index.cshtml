@@ -28,13 +28,114 @@
        data-toolbar="#toolBar">
 </table>
 
+<div class="modal modal-wide" id="MstModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80vw" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">明細頁面</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#basic" data-toggle="tab">
+                                一般資料
+                            </a>
+                        </li>
+                        <li><a href="#grades" data-toggle="tab">各科成績</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="basic">
+                            <div class="form-horizontal" style="padding-top: 50px">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Name, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="Name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Sex, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="Sex">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Weight, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="Weight">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Heigh, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="Heigh">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Residential_Address, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="Residential_Address">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CellPhone, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="CellPhone">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="grades">
+                            <div style="padding-top: 50px">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ChScores, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="ChScores">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MathScores, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="MathScores">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.EnScores, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" name="EnScores">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" data-dismiss="modal">關閉</a>
+                <button type="button" id="saveModalButton" onclick="CallMstSave();" class="btn btn-primary" data-dismiss="modal">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    var $modal = $('#MstModal');
+    var $table = $('#table');
+
     $(function () {
         $("#MstQueryBtn").click(function () {
             Query();
         });
 
         initTable();
+
+        $modal.on('show.bs.modal', function (e) {
+            $('#myTab a:first').tab('show');
+        })
     })
 
     function initTable() {
@@ -98,4 +199,44 @@
         });
     }
 
+    function Edit(key = '') {
+        $('#MstModal').data('IsAddType', key == '' ? true : false);
+
+        if (key) {
+            $.ajax({
+                url: '@Url.Action("RowRead", "Home")',
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({ keyValue: key }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    showModal("修改", response);
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        } else {
+            showModal("新增");
+        }
+    }
+
+    function showModal(title, row) {
+        $modal.find('.modal-title').text(title)
+        if (row) {
+            $modal.data('id', row.id)
+            for (var name in row) {
+                if (row[name]) {
+                    if ($('#MstModal').find('[name="' + name + '"]').is(':checkbox'))
+                        $modal.find('[name="' + name + '"]').prop('checked', row[name])
+                    else
+                        $modal.find('[name="' + name + '"]').val(row[name])
+                }
+            }
+        }
+        else {
+            $("#MstModal [type='text']").val('');
+        }
+        $('#MstModal').modal('show')
+    }
 </script>
