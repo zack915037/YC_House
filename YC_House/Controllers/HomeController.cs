@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
+using YC_House.Models;
+using YC_House.ViewModels;
 
 namespace YC_House.Controllers
 {
     public class HomeController : Controller
     {
+        DBManager dbm = new DBManager();
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Read(StudentBasicInfoViewModel post)
         {
-            ViewBag.Message = "Your application description page.";
+            var result = dbm.QueryStudentInfoTable()
+                .Where(v => string.IsNullOrEmpty(post.StudentId) ? true : (v.StudentId.Contains(post.StudentId)))
+                .Where(v => string.IsNullOrEmpty(post.Name) ? true : (v.Name.Contains(post.Name)));
 
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }
