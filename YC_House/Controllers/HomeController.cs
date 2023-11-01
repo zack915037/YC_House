@@ -28,5 +28,20 @@ namespace YC_House.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult Create(StudentBasicInfoViewModel vm)
+        {
+            dbm.CreateStudentBasicInfo(vm, "add");
+            dbm.CreateStudentGrades(vm, "add");
+            return Json(vm, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Update(StudentBasicInfoViewModel vm)
+        {
+            dbm.CreateStudentBasicInfo(vm, "update");
+            dbm.CreateStudentGrades(vm, "update");
+
+            return Json(vm, JsonRequestBehavior.AllowGet);
+        }
     }
 }
