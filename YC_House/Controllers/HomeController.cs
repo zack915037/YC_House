@@ -43,5 +43,13 @@ namespace YC_House.Controllers
 
             return Json(vm, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult Destroy(string studentId)
+        {
+            dbm.DeleteStudentBasicInfo(studentId);
+            dbm.DeleteStudentGrades(studentId);
+
+            return Json(studentId, JsonRequestBehavior.AllowGet);
+        }
     }
 }

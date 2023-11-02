@@ -81,5 +81,29 @@ namespace YC_House.Models
 
             _dbConnection.Execute(sql, parameters);
         }
+
+        public void DeleteStudentBasicInfo(string studentId)
+        {
+            string sql = @"Delete StudentBasicInfo Where StudentId = @StudentId";
+
+            var parameters = new
+            {
+                StudentId = studentId,
+            };
+
+            _dbConnection.Execute(sql, parameters);
+        }
+
+        public void DeleteStudentGrades(string studentId)
+        {
+            string sql = @"Delete StudentGrades Where StudentId = @StudentId";
+
+            var parameters = new
+            {
+                StudentId = studentId,
+            };
+
+            _dbConnection.Execute(sql, parameters);
+        }
     }
 }

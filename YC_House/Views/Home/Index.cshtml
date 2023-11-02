@@ -137,12 +137,12 @@
             Query();
         });
 
+        initTable();
+
         //新增
         $("#MstAddBtn").click(function () {
             Edit();
         });
-
-        initTable();
 
         $modal.on('show.bs.modal', function (e) {
             $('#myTab a:first').tab('show');
@@ -162,7 +162,7 @@
                             Edit(row['StudentId']);
                         },
                         'click .delete': function (e, value, row) {
-
+                            Del(row['StudentId']);
                         }
                     },
                     formatter: function actionFormatter(value) {
@@ -230,6 +230,21 @@
         } else {
             showModal("新增");
         }
+    }
+
+    function Del(studentId) {
+        $.ajax({
+            url: '@Url.Action("Destroy", "Home")',
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify({ StudentId: studentId }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $('#table').bootstrapTable('removeByUniqueId', response)
+            },
+            error: function (response) {
+                window.dialog.showError("錯誤");
+        }});
     }
 
     function CallMstSave() {
