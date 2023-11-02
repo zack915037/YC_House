@@ -54,6 +54,7 @@
                                     @Html.LabelFor(model => model.StudentId, new { @class = "col-sm-4 control-label" })
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" name="StudentId">
+                                        @Html.ValidationMessageFor(model => model.StudentId, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -267,7 +268,7 @@
                 }
             },
             error: function (r) {
-                console.log(r.responseText);
+                alert(r.responseText);
             }
         });
     }

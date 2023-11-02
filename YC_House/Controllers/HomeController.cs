@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Web.Mvc;
+using Antlr.Runtime.Misc;
 using YC_House.Models;
 using YC_House.ViewModels;
 
@@ -31,9 +34,18 @@ namespace YC_House.Controllers
 
         public JsonResult Create(StudentBasicInfoViewModel vm)
         {
-            dbm.CreateStudentBasicInfo(vm, "add");
-            dbm.CreateStudentGrades(vm, "add");
-            return Json(vm, JsonRequestBehavior.AllowGet);
+            if (ModelState.IsValid)
+            {
+                dbm.CreateStudentBasicInfo(vm, "add");
+                dbm.CreateStudentGrades(vm, "add");
+                return Json(vm, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var errMsg = String.Join(" ", ModelState.Values.SelectMany(x => x.Errors.Select(f => f.ErrorMessage)).ToList());
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(errMsg);
+            }
         }
 
         public JsonResult Update(StudentBasicInfoViewModel vm)

@@ -5,6 +5,7 @@ namespace YC_House.ViewModels
     public class StudentBasicInfoViewModel
     {
         [Display(Name = "學號")]
+        [Required(ErrorMessage ="學號必填")]
         public string StudentId { get; set; }
         [Display(Name = "姓名")]
         public string Name { get; set; }
