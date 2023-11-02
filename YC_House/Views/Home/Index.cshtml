@@ -212,6 +212,7 @@
 
     function Edit(key = '') {
         $('#MstModal').data('IsAddType', key == '' ? true : false);
+        $('#MstModal [name="StudentId"]').attr('readonly', key == '' ? false : true);
 
         if (key) {
             $.ajax({
